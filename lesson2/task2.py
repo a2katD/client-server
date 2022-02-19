@@ -11,7 +11,7 @@ def write_order_to_json(item, quantity, price, buyer, date):
     }
 
     with open('orders.json', 'w', encoding='utf-8') as f:
-        dump = json.dumps(data_dict, indent=4)
+        dump = json.dumps(data_dict, indent=4, ensure_ascii=False)
         f.write(dump)
 
 
