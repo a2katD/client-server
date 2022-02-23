@@ -22,7 +22,7 @@ def process_ans(meassage):
     if RESPONSE in meassage:
         if meassage[RESPONSE] == 200:
             return "200: OK"
-        return f'{meassage[RESPONSE]}: meassage[ERROR]'
+        return f'{meassage[RESPONSE]}: {meassage[ERROR]}'
     raise ValueError
 
 
