@@ -1,5 +1,11 @@
 import json
+import sys
+import os
 from common.variables import MAX_PACKEGE_LENGTH, ENCODING
+
+sys.path.append(os.path.join(os.getcwd(), '..'))
+
+from errors import *
 
 
 def get_message(client):
@@ -10,7 +16,9 @@ def get_message(client):
             response = json.loads(json_response)
             if isinstance(response, dict):
                 return response
-    raise ValueError
+            else:
+                raise IncorrectDataRecivedError
+    raise IncorrectDataRecivedError
 
 
 def send_message(sock, message):
@@ -19,4 +27,4 @@ def send_message(sock, message):
         encoded_message = json_message.encode(ENCODING)
         sock.send(encoded_message)
     else:
-        raise ValueError
+        raise NonDictInputError
