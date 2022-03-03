@@ -1,16 +1,17 @@
 import json
 import sys
 import logging
-import logs.config_server_log
 
 from errors import *
 from common.utils import get_message, send_message
 from common.variables import *
 from socket import socket, AF_INET, SOCK_STREAM
+from log_decor import log
 
 SERVER_LOGGER = logging.getLogger('serverlog')
 
 
+@log
 def process_client_message(message):
     SERVER_LOGGER.debug(f'Разбор сообщения от клиента: {message}')
     if ACTION in message and message[ACTION] == PRESENCE and TIME in message and USER in message and message[USER][

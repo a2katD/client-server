@@ -6,8 +6,10 @@ from common.variables import MAX_PACKEGE_LENGTH, ENCODING
 sys.path.append(os.path.join(os.getcwd(), '..'))
 
 from errors import *
+from log_decor import log
 
 
+@log
 def get_message(client):
     encoded_response = client.recv(MAX_PACKEGE_LENGTH)
     if isinstance(encoded_response, bytes):
@@ -21,6 +23,7 @@ def get_message(client):
     raise IncorrectDataRecivedError
 
 
+@log
 def send_message(sock, message):
     if isinstance(message, dict):
         json_message = json.dumps(message)
