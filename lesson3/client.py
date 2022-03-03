@@ -1,17 +1,18 @@
 import json
 import sys
 import logging
-import logs.config_client_log
 
 from errors import *
 from time import time
 from common.utils import send_message, get_message
 from common.variables import *
 from socket import socket, AF_INET, SOCK_STREAM
+from log_decor import log
 
 CLIENT_LOGGER = logging.getLogger('clientlog')
 
 
+@log
 def create_presence(account_name='Guest'):
     out = {
         ACTION: PRESENCE,
@@ -24,6 +25,7 @@ def create_presence(account_name='Guest'):
     return out
 
 
+@log
 def process_ans(meassage):
     CLIENT_LOGGER.debug(f'Разбор сообщения от сервера: {meassage}')
     if RESPONSE in meassage:
