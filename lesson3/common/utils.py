@@ -23,7 +23,7 @@ def get_message(client):
     raise IncorrectDataRecivedError
 
 
-# @log
+@log
 def send_message(sock, message):
     if isinstance(message, dict):
         json_message = json.dumps(message)
