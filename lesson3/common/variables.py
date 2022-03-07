@@ -8,14 +8,14 @@ ACTION = 'action'
 TIME = 'time'
 USER = 'user'
 ACCOUNT_NAME = 'account_name'
-SENDER = 'sender'
+SENDER = 'from'
+DESTINATION = 'to'
 
 PRESENCE = 'presence'
 RESPONSE = 'response'
 ERROR = 'error'
-RESPONDEFAULT_IP_ADDRESSSE = 'respondefault_ip_adressse'
 MESSAGE = 'message'
 MESSAGE_TEXT = 'mess_text'
+EXIT = 'exit'
 
-CLIENTS_LISTEN_COUNT = 2
-CLIENTS_SENDER_COUNT = 2
+CLIENTS_COUNT = 2
