@@ -7,10 +7,9 @@ from ipaddress import ip_address, ip_network, ip_interface
 ip_list = [
     '87.250.250.242',
     'yandex.ru',
-    '74.125.131.136',
-    'google.com',
     '192.168.99.99',
     '192.168.3.99',
+    'sdfgksjdnfgsdngj.ru'
 ]
 
 
@@ -21,7 +20,11 @@ def host_ping(ip_list):
         try:
             IPV4 = ip_address(ip)
         except ValueError:
-            IPV4 = ip_address(socket.gethostbyname(ip))
+            try:
+                IPV4 = ip_address(socket.gethostbyname(ip))
+            except:
+                print(f'Узел {ip} недоступен')
+                continue
         command = ['ping', key, '2', '-w', '1', str(IPV4)]
         process = Popen(command, stdout=PIPE)
         if process.wait() == 0:
