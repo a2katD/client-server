@@ -2,15 +2,7 @@ from subprocess import Popen, PIPE
 import chardet
 import platform
 import socket
-from ipaddress import ip_address, ip_network, ip_interface
-
-ip_list = [
-    '87.250.250.242',
-    'yandex.ru',
-    '192.168.99.99',
-    '192.168.3.99',
-    'sdfgksjdnfgsdngj.ru'
-]
+from ipaddress import ip_address
 
 
 def host_ping(ip_list):
@@ -32,4 +24,13 @@ def host_ping(ip_list):
         else:
             print(f'Узел {IPV4} недоступен')
 
-host_ping(ip_list)
+
+if __name__ == '__main__':
+    ip_list = [
+        '87.250.250.242',
+        'yandex.ru',
+        '192.168.99.99',
+        '192.168.3.99',
+        'sdfgksjdnfgsdngj.ru'
+    ]
+    host_ping(ip_list)
