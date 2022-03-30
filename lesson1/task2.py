@@ -3,7 +3,7 @@ from task1 import host_ping
 from ipaddress import ip_address
 
 
-def host_range_ping():
+def host_range_ping(tabulate=False):
     while True:
         ip = input('Введите начальный ip адрес: ')
         try:
@@ -22,7 +22,8 @@ def host_range_ping():
         break
 
     host_list = [str(IPV4 + i) for i in range(int(quantity))]
-    host_ping(host_list)
+    return host_ping(host_list, tabulate)
+
 
 if __name__ == '__main__':
     host_range_ping()
