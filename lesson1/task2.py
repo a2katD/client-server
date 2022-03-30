@@ -8,6 +8,7 @@ def host_range_ping():
         ip = input('Введите начальный ip адрес: ')
         try:
             IPV4 = ip_address(socket.gethostbyname(ip))
+            last_oct = int(str(IPV4).split('.')[3])
         except:
             print('Некорректный ip адрес')
             continue
@@ -15,11 +16,13 @@ def host_range_ping():
         if not quantity.isdigit() or int(quantity) <= 0:
             print('Неверное значение, введите положительное число')
             continue
+        if (last_oct + int(quantity)) > 256:
+            print(f'По условию можно менять только последний октет.'
+                  f'т.е. максимальное число хостов {256 - last_oct}')
         break
 
-    for i in range(int(quantity)):
-        host_ping([IPV4 + i])
-
+    host_list = [str(IPV4 + i) for i in range(int(quantity))]
+    host_ping(host_list)
 
 if __name__ == '__main__':
     host_range_ping()
