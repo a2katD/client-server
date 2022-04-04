@@ -7,6 +7,9 @@ from common.utils import get_message, send_message
 from common.variables import *
 from socket import socket, AF_INET, SOCK_STREAM
 from log_decor import log
+from descriptrs import Port
+from metaclasses import ServerVerifier
+
 
 SERVER_LOGGER = logging.getLogger('serverlog')
 
@@ -20,16 +23,18 @@ def arg_parser():
     listen_addr = namespace.a
     listen_port = namespace.p
 
-    if not 1023 < listen_port < 65536:
-        SERVER_LOGGER.critical(
-            f'Попытка запуска сервера с указанием неподходящего порта '
-            f'{listen_port}. Доступные порты с 1024 по 65535')
-        sys.exit(1)
+    # if not 1023 < listen_port < 65536:
+    #     SERVER_LOGGER.critical(
+    #         f'Попытка запуска сервера с указанием неподходящего порта '
+    #         f'{listen_port}. Доступные порты с 1024 по 65535')
+    #     sys.exit(1)
 
     return listen_addr, listen_port
 
 
-class Server:
+class Server(metaclass=ServerVerifier):
+    port = Port()
+
     def __init__(self, listen_address, listen_port):
         self.addr = listen_address
         self.port = listen_port

@@ -10,11 +10,12 @@ from common.utils import send_message, get_message
 from common.variables import *
 from socket import socket, AF_INET, SOCK_STREAM
 from log_decor import log
+from metaclasses import ClientVerifier
 
 CLIENT_LOGGER = logging.getLogger('clientlog')
 
 
-class ClientSender(threading.Thread):
+class ClientSender(threading.Thread, metaclass=ClientVerifier):
     def __init__(self, account_name, sock):
         self.account_name = account_name
         self.sock = sock
@@ -73,7 +74,7 @@ class ClientSender(threading.Thread):
         print('exit - выход из программы')
 
 
-class ClientReader(threading.Thread):
+class ClientReader(threading.Thread, metaclass=ClientVerifier):
     def __init__(self, account_name, sock):
         self.account_name = account_name
         self.sock = sock
