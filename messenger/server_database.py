@@ -1,6 +1,6 @@
 from datetime import datetime
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, DateTime
-from sqlalchemy.orm import mapper, sessionmaker
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from common.variables import SERVER_DATABASE
 
@@ -19,7 +19,6 @@ class ServerStorage:
         def __init__(self, username):
             self.name = username
             self.last_login = datetime.now()
-            # self.id = None
 
     class ActiveUsers(Base):
         """Класс отображает таблицы активных пользователей"""
@@ -36,7 +35,6 @@ class ServerStorage:
             self.ip = ip
             self.port = port
             self.login_time = login_time
-            # self.id = None
 
     class LoginHistory(Base):
         """Класс отображает истории входов"""
@@ -53,7 +51,6 @@ class ServerStorage:
             self.last_conn = last_conn
             self.ip = ip
             self.port = port
-            # self.id = None
 
     def __init__(self):
         self.database_engine = create_engine(SERVER_DATABASE, echo=False, pool_recycle=7200)
@@ -95,7 +92,7 @@ class ServerStorage:
         """Возвращаем список всех зарегистрированных пользователей"""
 
         query = self.session.query(
-            self.AllUsers.username,
+            self.AllUsers.name,
             self.AllUsers.last_login
         )
         return query.all()
@@ -114,13 +111,13 @@ class ServerStorage:
     def login_history(self, username=None):
         """Возвращаем историю последних входов пользователей
         username: фильтрует по имени пользователя"""
-        query = self.session.query(self.AllUsers.username,
+        query = self.session.query(self.AllUsers.name,
                                    self.LoginHistory.ip,
                                    self.LoginHistory.port,
                                    self.LoginHistory.last_conn
                                    ).join(self.AllUsers)
         if username:
-            query = query.filter(self.AllUsers.username == username)
+            query = query.filter(self.AllUsers.name == username)
         return query.all()
 
 
@@ -133,11 +130,11 @@ if __name__ == '__main__':
     print(db.active_users_list())
 
     db.user_logout('client_1')
-    # print(' ---- Выполняем логаут client_1 ----')
+    print(' ---- Выполняем логаут client_1 ----')
     print(db.active_users_list())
-    #
-    # print(' ---- История входов пользователя client_1 ----')
-    # print(db.login_history('client_1'))
-    #
-    # print(' ---- Список всех зарегистрированных пользователей ----')
-    # print(db.users_list())
+
+    print(' ---- История входов пользователя client_1 ----')
+    print(db.login_history('client_1'))
+
+    print(' ---- Список всех зарегистрированных пользователей ----')
+    print(db.users_list())

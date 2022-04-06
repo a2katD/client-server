@@ -1,11 +1,13 @@
 import argparse
 import sys
 import logging
+import threading
+import time
 
 from select import select
 from common.utils import get_message, send_message
 from common.variables import *
-from socket import socket, AF_INET, SOCK_STREAM
+from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
 from log_decor import log
 from descriptrs import Port
 from metaclasses import ServerVerifier
@@ -25,7 +27,7 @@ def arg_parser():
     return listen_addr, listen_port
 
 
-class Server(metaclass=ServerVerifier):
+class Server(threading.Thread, metaclass=ServerVerifier):
     port = Port()
 
     def __init__(self, listen_address, listen_port, database):
@@ -35,6 +37,7 @@ class Server(metaclass=ServerVerifier):
         self.messages = []
         self.names = dict()
         self.database = database
+        super().__init__()
 
     def init_socket(self):
         SERVER_LOGGER.info(
@@ -42,13 +45,14 @@ class Server(metaclass=ServerVerifier):
             f'адрес с которого принимаются подключения: {self.addr}. '
             f'Если адрес не указан, принимаются соединения с любых адресов.')
         transport = socket(AF_INET, SOCK_STREAM)
+        transport.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         transport.bind((self.addr, self.port))
         transport.settimeout(0.5)
 
         self.sock = transport
         self.sock.listen()
 
-    def main_loop(self):
+    def run(self):
 
         self.init_socket()
 
@@ -159,6 +163,7 @@ def main():
     server = Server(listen_address, listen_port, database)
     server.daemon = True
     server.start()
+    time.sleep(0.5)
 
     print_help()
 
