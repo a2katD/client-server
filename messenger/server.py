@@ -1,15 +1,17 @@
 import argparse
 import sys
 import logging
+import threading
+import time
 
 from select import select
 from common.utils import get_message, send_message
 from common.variables import *
-from socket import socket, AF_INET, SOCK_STREAM
+from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
 from log_decor import log
 from descriptrs import Port
 from metaclasses import ServerVerifier
-
+from server_database import ServerStorage
 
 SERVER_LOGGER = logging.getLogger('serverlog')
 
@@ -22,25 +24,20 @@ def arg_parser():
     namespace = parser.parse_args(sys.argv[1:])
     listen_addr = namespace.a
     listen_port = namespace.p
-
-    # if not 1023 < listen_port < 65536:
-    #     SERVER_LOGGER.critical(
-    #         f'Попытка запуска сервера с указанием неподходящего порта '
-    #         f'{listen_port}. Доступные порты с 1024 по 65535')
-    #     sys.exit(1)
-
     return listen_addr, listen_port
 
 
-class Server(metaclass=ServerVerifier):
+class Server(threading.Thread, metaclass=ServerVerifier):
     port = Port()
 
-    def __init__(self, listen_address, listen_port):
+    def __init__(self, listen_address, listen_port, database):
         self.addr = listen_address
         self.port = listen_port
         self.clients = []
         self.messages = []
         self.names = dict()
+        self.database = database
+        super().__init__()
 
     def init_socket(self):
         SERVER_LOGGER.info(
@@ -48,13 +45,14 @@ class Server(metaclass=ServerVerifier):
             f'адрес с которого принимаются подключения: {self.addr}. '
             f'Если адрес не указан, принимаются соединения с любых адресов.')
         transport = socket(AF_INET, SOCK_STREAM)
+        transport.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         transport.bind((self.addr, self.port))
         transport.settimeout(0.5)
 
         self.sock = transport
         self.sock.listen()
 
-    def main_loop(self):
+    def run(self):
 
         self.init_socket()
 
@@ -116,6 +114,8 @@ class Server(metaclass=ServerVerifier):
                 and TIME in message and USER in message:
             if message[USER][ACCOUNT_NAME] not in self.names.keys():
                 self.names[message[USER][ACCOUNT_NAME]] = client
+                client_ip, client_port = client.getpeername()
+                self.database.user_login(message[USER][ACCOUNT_NAME], client_ip, client_port)
                 send_message(client, RESPONSE_200)
             else:
                 response = RESPONSE_400
@@ -135,6 +135,7 @@ class Server(metaclass=ServerVerifier):
         elif ACTION in message \
                 and message[ACTION] == EXIT \
                 and ACCOUNT_NAME in message:
+            self.database.user_logout(message[ACCOUNT_NAME])
             self.clients.remove(self.names[ACCOUNT_NAME])
             self.names[ACCOUNT_NAME].close()
             del self.names[ACCOUNT_NAME]
@@ -146,11 +147,45 @@ class Server(metaclass=ServerVerifier):
             return
 
 
+def print_help():
+    print('Поддерживаемые комманды:')
+    print('users - список известных пользователей')
+    print('connected - список подключённых пользователей')
+    print('loghist - история входов пользователя')
+    print('exit - завершение работы сервера.')
+    print('help - вывод справки по поддерживаемым командам')
+
+
 def main():
     listen_address, listen_port = arg_parser()
+    database = ServerStorage()
 
-    server = Server(listen_address, listen_port)
-    server.main_loop()
+    server = Server(listen_address, listen_port, database)
+    server.daemon = True
+    server.start()
+    time.sleep(0.5)
+
+    print_help()
+
+    while True:
+        command = input('Введите команду: ')
+        if command == 'help':
+            print_help()
+        elif command == 'exit':
+            break
+        elif command == 'users':
+            for user in sorted(database.users_list()):
+                print(f'Пользователь {user[0]}, последний вход: {user[1]}')
+        elif command == 'connected':
+            for user in sorted(database.active_users_list()):
+                print(f'Пользователь {user[0]}, подключен: {user[1]}:{user[2]}, время установки соединения: {user[3]}')
+        elif command == 'loghist':
+            name = input('Введите имя пользователя для просмотра истории. '
+                         'Для вывода всей истории, просто нажмите Enter: ')
+            for user in sorted(database.login_history(name)):
+                print(f'Пользователь: {user[0]} время входа: {user[1]}. Вход с: {user[2]}:{user[3]}')
+        else:
+            print('Неверная команда, повторите ввод')
 
 
 if __name__ == '__main__':
