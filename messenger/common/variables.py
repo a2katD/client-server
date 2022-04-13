@@ -4,7 +4,8 @@ MAX_CONNECTIONS = 5
 MAX_PACKEGE_LENGTH = 1024
 ENCODING = 'utf-8'
 CLIENTS_COUNT = 2
-SERVER_DATABASE = 'sqlite:///server_base.db3'
+SERVER_CONFIG = 'server.ini'
+# SERVER_DATABASE = 'sqlite:///server_base.db3'
 
 ACTION = 'action'
 TIME = 'time'
@@ -19,8 +20,16 @@ ERROR = 'error'
 MESSAGE = 'message'
 MESSAGE_TEXT = 'mess_text'
 EXIT = 'exit'
+GET_CONTACTS = 'get_contacts'
+LIST_INFO = 'data_list'
+REMOVE_CONTACT = 'remove'
+ADD_CONTACT = 'add'
+USERS_REQUEST = 'get_users'
 
 RESPONSE_200 = {RESPONSE: 200}
+RESPONSE_202 = {RESPONSE: 202,
+                LIST_INFO:None
+                }
 RESPONSE_400 = {
     RESPONSE: 400,
     ERROR: None
