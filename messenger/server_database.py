@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from common.variables import SERVER_DATABASE
+from common.variables import *
 
 
 class ServerStorage:
@@ -52,8 +52,35 @@ class ServerStorage:
             self.ip = ip
             self.port = port
 
-    def __init__(self):
-        self.database_engine = create_engine(SERVER_DATABASE, echo=False, pool_recycle=7200)
+    class UsersContacts(Base):
+        """Класс отображение таблицы контактов пользователей"""
+
+        __tablename__ = 'User_contacts'
+        id = Column(Integer, primary_key=True)
+        user = Column(ForeignKey('Users.id'))
+        contact = Column(ForeignKey('Users.id'))
+
+        def __init__(self, user, contact):
+            self.user = user
+            self.contact = contact
+
+    class UsersHistory(Base):
+        """Класс отображение таблицы истории действий"""
+
+        __tablename__ = 'Users_history'
+        id = Column(Integer, primary_key=True)
+        user = Column(ForeignKey('Users.id'))
+        sent = Column(Integer)
+        accepted = Column(Integer)
+
+        def __init__(self, user):
+            self.user = user
+            self.sent = 0
+            self.accepted = 0
+
+    def __init__(self, path):
+        self.database_engine = create_engine(f'sqlite:///{path}', echo=False, pool_recycle=7200,
+                                             connect_args={'check_same_thread': False})
         self.Base.metadata.create_all(self.database_engine)
         Session = sessionmaker(bind=self.database_engine)
         self.session = Session()
@@ -73,6 +100,7 @@ class ServerStorage:
             user = self.AllUsers(username)
             self.session.add(user)
             self.session.commit()
+            self.session.add(self.UsersHistory(user.id))
 
         new_active_user = self.ActiveUsers(user.id, ip, port, datetime.now())
         self.session.add(new_active_user)
@@ -118,6 +146,60 @@ class ServerStorage:
                                    ).join(self.AllUsers)
         if username:
             query = query.filter(self.AllUsers.name == username)
+        return query.all()
+
+    def process_message(self, sender, recipient):
+        """Фиксируем передачу сообщения и отмечаем это в БД"""
+        sender = self.session.query(self.AllUsers).filter_by(name=sender).first().id
+        recipient = self.session.query(self.AllUsers).filter_by(name=recipient).first().id
+        sender_row = self.session.query(self.UsersHistory).filter_by(user=sender).first()
+        sender_row.sent += 1
+        recipient_row = self.session.query(self.UsersHistory).filter_by(user=recipient).first()
+        recipient_row.accepted += 1
+        self.session.commit()
+
+    def add_contact(self, user, contact):
+        """Добавляем контакт для пользователя"""
+        user = self.session.query(self.AllUsers).filter_by(name=user).first()
+        contact = self.session.query(self.AllUsers).filter_by(name=contact).first()
+
+        if not contact or self.session.query(self.UsersContacts).filter_by(user=user.id, contact=contact.id).count():
+            return
+        contact_row = self.UsersContacts(user.id, contact.id)
+        self.session.add(contact_row)
+        self.session.commit()
+
+    def remove_contact(self, user, contact):
+        """Удаляем контакт из базы данных"""
+        user = self.session.query(self.AllUsers).filter_by(name=user).first()
+        contact = self.session.query(self.AllUsers).filter_by(name=contact).first()
+
+        if not contact:
+            return
+
+        print(self.session.query(self.UsersContacts).filter(
+            self.UsersContacts.user == user.id,
+            self.UsersContacts.contact == contact.id
+        ).delete())
+        self.session.commit()
+
+    def get_contacts(self, username):
+        """Функция возвращает список контактов пользователя."""
+
+        user = self.session.query(self.AllUsers).filter_by(name=username).one()
+        query = self.session.query(self.UsersContacts, self.AllUsers.name). \
+            filter_by(user=user.id). \
+            join(self.AllUsers, self.UsersContacts.contact == self.AllUsers.id)
+        return [contact[1] for contact in query.all()]
+
+    def message_history(self):
+        """Возвращаем количество переданных и полученных сообщений"""
+        query = self.session.query(
+            self.AllUsers.name,
+            self.AllUsers.last_login,
+            self.UsersHistory.sent,
+            self.UsersHistory.accepted
+        ).join(self.AllUsers)
         return query.all()
 
 
