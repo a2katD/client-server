@@ -3,7 +3,7 @@ import argparse
 import sys
 import logging
 
-from messenger.common.errors import *
+from common.errors import *
 from time import time
 from common.utils import send_message, get_message
 from common.variables import *
