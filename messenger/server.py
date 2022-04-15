@@ -61,7 +61,7 @@ class Server(threading.Thread, metaclass=ServerVerifier):
         self.sock.listen()
 
     def run(self):
-
+        global new_connection
         self.init_socket()
 
         print('Сервер запущен и находится в режиме прослушивания')
@@ -95,6 +95,8 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                                 del self.names[name]
                                 break
                         self.clients.remove(client_with_message)
+                        with conflag_lock:
+                            new_connection = True
 
             for message in self.messages:
                 try:
@@ -106,6 +108,8 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                     self.clients.remove(self.names[message[DESTINATION]])
                     self.database.user_logout(message[DESTINATION])
                     del self.names[message[DESTINATION]]
+                    with conflag_lock:
+                        new_connection = True
             self.messages.clear()
 
     def process_message(self, message, listen_socks):
@@ -147,8 +151,16 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                 and DESTINATION in message \
                 and TIME in message \
                 and SENDER in message \
-                and MESSAGE_TEXT in message:
-            self.messages.append(message)
+                and MESSAGE_TEXT in message \
+                and self.names[message[SENDER]] == client:
+            if message[DESTINATION] in self.names:
+                self.messages.append(message)
+                self.database.process_message(message[SENDER], message[DESTINATION])
+                send_message(client, RESPONSE_200)
+            else:
+                response = RESPONSE_400
+                response[ERROR] = 'Пользователь не зарегистрирован на сервере.'
+                send_message(client, response)
             return
 
         elif ACTION in message \
@@ -158,9 +170,9 @@ class Server(threading.Thread, metaclass=ServerVerifier):
             self.database.user_logout(message[ACCOUNT_NAME])
             self.clients.remove(self.names[ACCOUNT_NAME])
             self.names[ACCOUNT_NAME].close()
+            del self.names[ACCOUNT_NAME]
             with conflag_lock:
                 new_connection = True
-            del self.names[ACCOUNT_NAME]
             return
 
         elif ACTION in message and message[ACTION] == GET_CONTACTS and USER in message and \
