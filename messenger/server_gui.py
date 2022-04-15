@@ -86,16 +86,7 @@ class MainWindow(QMainWindow):
         self.setFixedSize(800, 600)
         self.setWindowTitle('Messaging Server alpha release')
 
-        # Надпись о том, что ниже список подключённых клиентов
-        self.label = QLabel('Список подключённых клиентов:', self)
-        self.label.setFixedSize(400, 15)
-        self.label.move(10, 35)
-
-        # Окно со списком подключённых клиентов.
-        self.active_clients_table = QTableView(self)
-        self.active_clients_table.move(10, 55)
-        self.active_clients_table.setFixedSize(780, 400)
-
+        # Добавление иконки
         try:
             from PyQt5.QtWinExtras import QtWin
             self.myappid = 'mycompany.myproduct.subproduct.version'
@@ -106,6 +97,18 @@ class MainWindow(QMainWindow):
             self.icon.setWindowIcon(QIcon('common/icon.png'))
         except:
             pass
+
+        # Надпись о том, что ниже список подключённых клиентов
+        self.label = QLabel('Список подключённых клиентов:', self)
+        self.label.setFixedSize(400, 15)
+        self.label.move(10, 35)
+
+        # Окно со списком подключённых клиентов.
+        self.active_clients_table = QTableView(self)
+        self.active_clients_table.move(10, 55)
+        self.active_clients_table.setFixedSize(780, 400)
+
+
 
         # Последним параметром отображаем окно.
         self.show()
