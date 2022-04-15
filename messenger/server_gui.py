@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QLabel, QTableView, QDialog, QPushButton, \
-    QLineEdit, QFileDialog, QMessageBox
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
+    QLineEdit, QFileDialog, QMessageBox, QWidget
+from PyQt5.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt5.QtCore import Qt
 import os
 
@@ -76,10 +76,10 @@ class MainWindow(QMainWindow):
 
         # Тулбар
         self.toolbar = self.addToolBar('MainBar')
-        self.toolbar.addAction(self.exitAction)
         self.toolbar.addAction(self.refresh_button)
         self.toolbar.addAction(self.show_history_button)
         self.toolbar.addAction(self.config_btn)
+        self.toolbar.addAction(self.exitAction)
 
         # Настройки геометрии основного окна
         # Поскольку работать с динамическими размерами мы не умеем, и мало времени на изучение, размер окна фиксирован.
@@ -95,6 +95,17 @@ class MainWindow(QMainWindow):
         self.active_clients_table = QTableView(self)
         self.active_clients_table.move(10, 55)
         self.active_clients_table.setFixedSize(780, 400)
+
+        try:
+            from PyQt5.QtWinExtras import QtWin
+            self.myappid = 'mycompany.myproduct.subproduct.version'
+            QtWin.setCurrentProcessExplicitAppUserModelID(self.myappid)
+            self.app = QApplication(sys.argv)
+            self.app.setWindowIcon(QIcon('common/icon.png'))
+            self.icon = QWidget()
+            self.icon.setWindowIcon(QIcon('common/icon.png'))
+        except:
+            pass
 
         # Последним параметром отображаем окно.
         self.show()
