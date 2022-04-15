@@ -64,11 +64,11 @@ class ClientMainWindow(QMainWindow):
             self.myappid = 'mycompany.myproduct.subproduct.version'
             QtWin.setCurrentProcessExplicitAppUserModelID(self.myappid)
             self.app = QApplication(sys.argv)
-            self.app.setWindowIcon(QIcon('common/icon.png'))
-            self.icon = QWidget()
-            self.icon.setWindowIcon(QIcon('common/icon.png'))
         except:
             pass
+        self.app.setWindowIcon(QIcon('common/icon.png'))
+        self.icon = QWidget()
+        self.icon.setWindowIcon(QIcon('common/icon.png'))
 
         self.clients_list_update()
         self.set_disabled_input()
