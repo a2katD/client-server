@@ -2,7 +2,6 @@ import json
 import sys
 import os
 
-sys.path.append(os.path.join(os.getcwd(), '..'))
 sys.path.append('../')
 from common.errors import *
 from common.log_decor import log
@@ -11,7 +10,7 @@ from common.variables import *
 
 @log
 def get_message(client):
-    encoded_response = client.recv(1024)
+    encoded_response = client.recv(MAX_PACKAGE_LENGTH)
     json_response = encoded_response.decode(ENCODING)
     response = json.loads(json_response)
     if isinstance(response, dict):

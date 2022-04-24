@@ -103,7 +103,7 @@ class ClientTransport(threading.Thread, QObject):
                 send_message(self.transport, presense)
                 ans = get_message(self.transport)
                 logger.debug(f'Server response = {ans}.')
-                self.process_server_ans(ans)
+                # self.process_server_ans(ans)
                 if RESPONSE in ans:
                     if ans[RESPONSE] == 400:
                         raise ServerError(ans[ERROR])
@@ -158,7 +158,7 @@ class ClientTransport(threading.Thread, QObject):
                 and message[DESTINATION] == self.username:
             logger.debug(f'Получено сообщение от пользователя {message[SENDER]}:'
                          f'{message[MESSAGE_TEXT]}')
-            self.new_message.emit(message[SENDER])
+            self.new_message.emit(message)
 
     # Функция, обновляющая контакт - лист с сервера
     def contacts_list_update(self):
@@ -296,9 +296,9 @@ class ClientTransport(threading.Thread, QObject):
                     self.running = False
                     self.connection_lost.emit()
                 # Если сообщение получено, то вызываем функцию обработчик:
-                else:
-                    logger.debug(f'Принято сообщение с сервера: {message}')
-                    self.process_server_ans(message)
+                # else:
+                #     logger.debug(f'Принято сообщение с сервера: {message}')
+                #     self.process_server_ans(message)
                 finally:
                     self.transport.settimeout(5)
             if message:
