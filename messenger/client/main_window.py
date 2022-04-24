@@ -270,7 +270,7 @@ class ClientMainWindow(QMainWindow):
             self.history_list_update()
 
     # Слот приёма нового сообщений
-    @pyqtSlot(str)
+    @pyqtSlot(dict)
     def message(self, message):
         encrypted_message = base64.b64decode(message[MESSAGE_TEXT])
         try:
