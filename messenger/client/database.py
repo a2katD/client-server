@@ -40,19 +40,6 @@ class ClientDatabase:
             self.message = message
             self.date = datetime.now()
 
-        # __tablename__ = 'message_history'
-        # id = Column(Integer, primary_key=True)
-        # from_user = Column(String)
-        # to_user = Column(String)
-        # message = Column(Text)
-        # date = Column(DateTime)
-        #
-        # def __init__(self, from_user, to_user, message):
-        #     self.from_user = from_user
-        #     self.to_user = to_user
-        #     self.message = message
-        #     self.date = datetime.now()
-
     class Contacts(Base):
         """Класс отображения списка контактов"""
 
@@ -99,9 +86,9 @@ class ClientDatabase:
             self.session.add(user_row)
         self.session.commit()
 
-    def save_message(self, from_user, to_user, message):
+    def save_message(self, contact, direction, message):
         """Функция сохраняет сообщения"""
-        message_row = self.MessageHistory(from_user, to_user, message)
+        message_row = self.MessageHistory(contact, direction, message)
         self.session.add(message_row)
         self.session.commit()
 
@@ -126,16 +113,6 @@ class ClientDatabase:
             return True
         else:
             return False
-
-    # def get_history(self, from_who=None, to_who=None):
-    #     """Функция возвращает историю переписки"""
-    #     query = self.session.query(self.MessageHistory)
-    #     if from_who:
-    #         query = query.filter_by(from_user=from_who)
-    #     if to_who:
-    #         query = query.filter_by(to_user=to_who)
-    #     return [(history_row.from_user, history_row.to_user, history_row.message, history_row.date)
-    #             for history_row in query.all()]
 
     def get_history(self, contact):
         """ Метод, возвращающий историю сообщений с определённым пользователем. """

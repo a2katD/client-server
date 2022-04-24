@@ -253,6 +253,7 @@ class ClientMainWindow(QMainWindow):
         message_text_encrypted_base64 = base64.b64encode(message_text_encrypted)
         try:
             self.transport.send_message(self.current_chat, message_text_encrypted_base64.decode('ascii'))
+            pass
         except ServerError as err:
             self.messages.critical(self, 'Ошибка', err.text)
         except OSError as err:
@@ -284,7 +285,7 @@ class ClientMainWindow(QMainWindow):
             self.history_list_update()
         else:
             # Проверим есть ли такой пользователь у нас в контактах:
-            self.ui.player.play()
+            # self.ui.player.play()
             if self.database.check_contact(sender):
                 # Если есть, спрашиваем о желании открыть с ним чат и открываем при желании
                 if self.messages.question(self, 'Новое сообщение',
@@ -313,11 +314,6 @@ class ClientMainWindow(QMainWindow):
         self.messages.warning(self, 'Сбой соединения', 'Потеряно соединение с сервером. ')
         self.close()
 
-    def make_connection(self, trans_obj):
-        trans_obj.new_message.connect(self.message)
-        trans_obj.connection_lost.connect(self.connection_lost)
-        trans_obj.message_205.connect(self.sig_205)
-
     @pyqtSlot()
     def sig_205(self):
         '''
@@ -333,3 +329,7 @@ class ClientMainWindow(QMainWindow):
             self.current_chat = None
         self.clients_list_update()
 
+    def make_connection(self, trans_obj):
+        trans_obj.new_message.connect(self.message)
+        trans_obj.connection_lost.connect(self.connection_lost)
+        trans_obj.message_205.connect(self.sig_205)

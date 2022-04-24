@@ -26,7 +26,7 @@ class ClientTransport(threading.Thread, QObject):
     message_205 = pyqtSignal()
     connection_lost = pyqtSignal()
 
-    def __init__(self, port, ip_address, database, username, password, keys):
+    def __init__(self, port, ip_address, database, username, passwd, keys):
         # Вызываем конструктор предка
         threading.Thread.__init__(self)
         QObject.__init__(self)
@@ -34,7 +34,7 @@ class ClientTransport(threading.Thread, QObject):
         self.database = database
         self.username = username
         self.transport = None
-        self.password = password
+        self.password = passwd
         self.keys = keys
 
         self.connection_init(port, ip_address)
@@ -118,18 +118,6 @@ class ClientTransport(threading.Thread, QObject):
             except (OSError, json.JSONDecodeError) as err:
                 logger.debug(f'Connection error.', exc_info=err)
                 raise ServerError('Сбой соединения в процессе авторизации.')
-
-    # Функция, генерирующая приветственное сообщение для сервера
-    # def create_presence(self):
-    #     out = {
-    #         ACTION: PRESENCE,
-    #         TIME: time.time(),
-    #         USER: {
-    #             ACCOUNT_NAME: self.username
-    #         }
-    #     }
-    #     logger.debug(f'Сформировано {PRESENCE} сообщение для пользователя {self.username}')
-    #     return out
 
     # Функция, обрабатывающая сообщения от сервера. Ничего не возвращает.
     # Генерирует исключение при ошибке.
@@ -274,8 +262,6 @@ class ClientTransport(threading.Thread, QObject):
     def run(self):
         logger.debug('Запущен процесс - приёмник сообщений с сервера.')
         while self.running:
-            # Отдыхаем секунду и снова пробуем захватить сокет. Если не сделать тут задержку,
-            # то отправка может достаточно долго ждать освобождения сокета.
             time.sleep(1)
             message = None
             with socket_lock:
@@ -284,8 +270,6 @@ class ClientTransport(threading.Thread, QObject):
                     message = get_message(self.transport)
                 except OSError as err:
                     if err.errno:
-                        # выход по таймауту вернёт номер ошибки err.errno равный None
-                        # поэтому, при выходе по таймауту мы сюда попросту не попадём
                         logger.critical(f'Потеряно соединение с сервером.')
                         self.running = False
                         self.connection_lost.emit()
@@ -295,10 +279,6 @@ class ClientTransport(threading.Thread, QObject):
                     logger.debug(f'Потеряно соединение с сервером.')
                     self.running = False
                     self.connection_lost.emit()
-                # Если сообщение получено, то вызываем функцию обработчик:
-                # else:
-                #     logger.debug(f'Принято сообщение с сервера: {message}')
-                #     self.process_server_ans(message)
                 finally:
                     self.transport.settimeout(5)
             if message:
