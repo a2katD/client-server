@@ -1,7 +1,13 @@
+import sys
+import os
+
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+
+sys.path.append(os.path.join(os.getcwd(), '..'))
+sys.path.append('../')
 from common.variables import *
 
 
@@ -15,10 +21,14 @@ class ServerStorage:
         id = Column(Integer, primary_key=True)
         name = Column(String, unique=True)
         last_login = Column(DateTime)
+        passwd_hash = Column('passwd_hash', String)
+        pubkey = Column('pubkey', Text)
 
-        def __init__(self, username):
+        def __init__(self, username, passwd_hash):
             self.name = username
+            self.passwd_hash = passwd_hash
             self.last_login = datetime.now()
+            self.pubkey = None
 
     class ActiveUsers(Base):
         """Класс отображает таблицы активных пользователей"""
@@ -88,7 +98,7 @@ class ServerStorage:
         self.session.query(self.ActiveUsers).delete()
         self.session.commit()
 
-    def user_login(self, username, ip, port):
+    def user_login(self, username, ip, port, key):
         """Обрабатываем вход пользователя, записывая его в таблицу активных юзеров,
         и в историю входов"""
 
@@ -96,11 +106,10 @@ class ServerStorage:
         if rez.count():
             user = rez.first()
             user.last_login = datetime.now()
+            if user.pubkey != key:
+                user.pubkey = key
         else:
-            user = self.AllUsers(username)
-            self.session.add(user)
-            self.session.commit()
-            self.session.add(self.UsersHistory(user.id))
+            raise ValueError('Пользователь не зарегистрирован.')
 
         new_active_user = self.ActiveUsers(user.id, ip, port, datetime.now())
         self.session.add(new_active_user)
@@ -201,6 +210,45 @@ class ServerStorage:
             self.UsersHistory.accepted
         ).join(self.AllUsers)
         return query.all()
+
+    def add_user(self, name, passwd_hash):
+        """Метод регистрации пользователя."""
+        user_row = self.AllUsers(name, passwd_hash)
+        self.session.add(user_row)
+        self.session.commit()
+        history_row = self.UsersHistory(user_row.id)
+        self.session.add(history_row)
+        self.session.commit()
+
+    def remove_user(self, name):
+        """Метод удаляющий пользователя из базы."""
+        user = self.session.query(self.AllUsers).filter_by(name=name).first()
+        self.session.query(self.ActiveUsers).filter_by(user=user.id).delete()
+        self.session.query(self.LoginHistory).filter_by(name=user.id).delete()
+        self.session.query(self.UsersContacts).filter_by(user=user.id).delete()
+        self.session.query(
+            self.UsersContacts).filter_by(
+            contact=user.id).delete()
+        self.session.query(self.UsersHistory).filter_by(user=user.id).delete()
+        self.session.query(self.AllUsers).filter_by(name=name).delete()
+        self.session.commit()
+
+    def get_hash(self, name):
+        """Метод получения хэша пароля пользователя."""
+        user = self.session.query(self.AllUsers).filter_by(name=name).first()
+        return user.passwd_hash
+
+    def get_pubkey(self, name):
+        """Метод получения публичного ключа пользователя."""
+        user = self.session.query(self.AllUsers).filter_by(name=name).first()
+        return user.pubkey
+
+    def check_user(self, name):
+        """Метод проверяющий существование пользователя."""
+        if self.session.query(self.AllUsers).filter_by(name=name).count():
+            return True
+        else:
+            return False
 
 
 if __name__ == '__main__':

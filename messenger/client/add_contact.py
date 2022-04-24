@@ -35,7 +35,7 @@ class AddContactDialog(QDialog):
         self.btn_refresh = QPushButton(self)
         btn_icon = QIcon('common/refresh_icon.png')
         self.btn_refresh.setIcon(btn_icon)
-        self.btn_refresh.setIconSize(QSize(48,48))
+        self.btn_refresh.setIconSize(QSize(48, 48))
         self.btn_refresh.setFixedSize(50, 50)
         self.btn_refresh.move(230, 20)
 
@@ -79,8 +79,10 @@ class AddContactDialog(QDialog):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     from database import ClientDatabase
+
     database = ClientDatabase('test1')
     from transport import ClientTransport
+
     transport = ClientTransport(7777, '127.0.0.1', database, 'test1')
     window = AddContactDialog(transport, database)
     window.show()

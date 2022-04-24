@@ -9,6 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
+
 class Ui_MainClientWindow(object):
     def setupUi(self, MainClientWindow):
         MainClientWindow.setObjectName("MainClientWindow")
@@ -32,7 +33,7 @@ class Ui_MainClientWindow(object):
         self.text_message.setGeometry(QtCore.QRect(300, 360, 391, 95))
         self.text_message.setObjectName("text_message")
         self.label_new_message = QtWidgets.QLabel(self.centralwidget)
-        self.label_new_message.setGeometry(QtCore.QRect(300, 330, 400, 16)) # Правка тут
+        self.label_new_message.setGeometry(QtCore.QRect(300, 330, 400, 16))  # Правка тут
         self.label_new_message.setObjectName("label_new_message")
         self.list_contacts = QtWidgets.QListView(self.centralwidget)
         self.list_contacts.setGeometry(QtCore.QRect(10, 20, 251, 411))
@@ -53,7 +54,7 @@ class Ui_MainClientWindow(object):
         self.btn_clear.setIconSize(QtCore.QSize(48, 48))
         self.btn_clear.setObjectName("btn_clear")
 
-        #Добабвление кустарых смайликов
+        # Добабвление кустарых смайликов
         self.smile1 = QtWidgets.QPushButton(self.centralwidget)
         self.smile1.setGeometry(QtCore.QRect(300, 460, 20, 20))
         smile1_icon = QtGui.QIcon('common/smile1.png')
@@ -123,4 +124,3 @@ class Ui_MainClientWindow(object):
         self.menu_exit.setText(_translate("MainClientWindow", "Выход"))
         self.menu_add_contact.setText(_translate("MainClientWindow", "Добавить контакт"))
         self.menu_del_contact.setText(_translate("MainClientWindow", "Удалить контакт"))
-

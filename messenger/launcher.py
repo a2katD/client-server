@@ -1,25 +1,35 @@
-from subprocess import Popen, CREATE_NEW_CONSOLE
-from common.variables import CLIENTS_COUNT
+import subprocess
 
-PROCESSES = []
 
-while True:
-    command = input(f'Запустить сервер "s"\n'
-                    f'Запустить {CLIENTS_COUNT} клиентов "k"\n'
-                    f'Закрыть всех клиентов "x" / Выйти "q"\n'
-                    f'Введите команду: ')
+def main():
+    process = []
 
-    if command == 'q':
-        break
-    elif command == 's':
-        PROCESSES.append(Popen('python server.py', creationflags=CREATE_NEW_CONSOLE))
-    elif command == 'k':
-        PROCESSES.extend([Popen(f'python client.py -n user{x + 1}', creationflags=CREATE_NEW_CONSOLE)
-                          for x in range(CLIENTS_COUNT)])
-        print(f"Запущено {CLIENTS_COUNT} клиентов")
-    elif command == 'x':
-        for p in PROCESSES:
-            p.kill()
-        PROCESSES.clear()
-    else:
-        print('Неизвестная команда, выберите из предложенных')
+    while True:
+        action = input(
+            'Выберите действие: q - выход , s - запустить сервер, k - запустить клиенты x - закрыть все окна:')
+        if action == 'q':
+            break
+        elif action == 's':
+            # Запускаем сервер!
+            process.append(
+                subprocess.Popen(
+                    'python server_script.py.py',
+                    creationflags=subprocess.CREATE_NEW_CONSOLE))
+        elif action == 'k':
+            print('Убедитесь, что на сервере зарегистрировано необходимо количество клиентов с паролем 123456.')
+            print('Первый запуск может быть достаточно долгим из-за генерации ключей!')
+            clients_count = int(
+                input('Введите количество тестовых клиентов для запуска: '))
+            # Запускаем клиентов:
+            for i in range(clients_count):
+                process.append(
+                    subprocess.Popen(
+                        f'python client.py -n test{i + 1} -p 123456',
+                        creationflags=subprocess.CREATE_NEW_CONSOLE))
+        elif action == 'x':
+            while process:
+                process.pop().kill()
+
+
+if __name__ == '__main__':
+    main()
