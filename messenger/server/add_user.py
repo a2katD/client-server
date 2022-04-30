@@ -80,23 +80,6 @@ class RegisterUser(QDialog):
                 self.client_name.text(),
                 binascii.hexlify(passwd_hash))
             self.messages.information(
-                self, 'Успешно', 'Пользователь успешно зарегистрирован.')
+                self, 'Успех', 'Пользователь успешно зарегистрирован.')
             self.server.service_update_lists()
             self.close()
-
-
-if __name__ == '__main__':
-    app = QApplication([])
-    from server_database import ServerStorage
-
-    database = ServerStorage('../server_database.db3')
-    import os
-    import sys
-
-    path1 = os.path.join(os.getcwd(), '..')
-    sys.path.insert(0, path1)
-    from core import MessageProcessor
-
-    server = MessageProcessor('127.0.0.1', 7777, database)
-    dial = RegisterUser(database, server)
-    app.exec_()
