@@ -16,7 +16,7 @@
     <script src="_static/translations.js"></script>
     <link rel="index" title="Алфавитный указатель" href="genindex.html" />
     <link rel="search" title="Поиск" href="search.html" />
-    <link rel="next" title="Common module" href="common.html" />
+    <link rel="next" title="Server module" href="server.html" />
     <link rel="prev" title="Welcome to ICQ’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -36,9 +36,9 @@
             
   <section id="client-module">
 <h1>Client module<a class="headerlink" href="#client-module" title="Ссылка на этот заголовок">¶</a></h1>
-<p>Клиентское приложение для обмена сообщениями. Поддерживает
-отправку сообщений пользователям которые находятся в сети, сообщения шифруются
-с помощью алгоритма RSA с длинной ключа 2048 bit.</p>
+<p>ICQ - современное клиентское приложение для обмена сообщениями.
+Сохраняет сообщения в базу данных SQLite.
+Обмен сообщениями происходит в зашифрованном виде.</p>
 <p>Аргументы коммандной строки:
 1. {имя сервера} - адрес сервера сообщений.
 2. {порт} - порт по которому принимаются подключения
@@ -413,8 +413,10 @@ instance that has no instance attributes and cannot be given any.</p>
 <li class="toctree-l2"><a class="reference internal" href="#del-contact-py">del_contact.py</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="common.html">Common module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="common.html">Common module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logs.html">logs module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unit_tests.html">unit_test module</a></li>
 </ul>
 
 <div class="relations">
@@ -422,7 +424,7 @@ instance that has no instance attributes and cannot be given any.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="предыдущая глава">Welcome to ICQ’s documentation!</a></li>
-      <li>Next: <a href="common.html" title="следующая глава">Common module</a></li>
+      <li>Next: <a href="server.html" title="следующая глава">Server module</a></li>
   </ul></li>
 </ul>
 </div>
