@@ -6,7 +6,7 @@ class IncorrectDataRecivedError(Exception):
 
 
 class NonDictInputError(Exception):
-    """исключение - аргумент функции не словарь."""
+    """Исключение - аргумент функции не словарь."""
 
     def __str__(self):
         return 'Аргумент функции должен быть словарём.'

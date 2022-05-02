@@ -19,6 +19,7 @@ CLIENT_LOGGER = logging.getLogger('clientlog')
 
 @log
 def arg_parser():
+    """Парсер аргуменетов командной строки строки"""
     parser = argparse.ArgumentParser()
     parser.add_argument('addr', default=DEFAULT_ADDR, nargs='?')
     parser.add_argument('port', default=DEFAULT_PORT, type=int, nargs='?')
@@ -32,14 +33,14 @@ def arg_parser():
 
     if not 1023 < server_port < 65536:
         CLIENT_LOGGER.critical(
-            f'Попытка запуска клиента с неподходящим номером порта: {server_port}. Допустимы адреса с 1024 до 65535. Клиент завершается.')
+            f'Попытка запуска клиента с неподходящим номером порта: '
+            f'{server_port}. Допустимы адреса с 1024 до 65535. Клиент завершается.')
         sys.exit(1)
 
     return server_address, server_port, client_name, client_passwd
 
 
 if __name__ == '__main__':
-    # Загружаем параметы коммандной строки
     server_address, server_port, client_name, client_passwd = arg_parser()
 
     # Создаём клиентокое приложение

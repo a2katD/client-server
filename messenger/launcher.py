@@ -2,6 +2,7 @@ import subprocess
 
 
 def main():
+    """Лаунчер для запуска сервера и клиента для Windows"""
     process = []
 
     while True:

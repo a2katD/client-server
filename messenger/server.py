@@ -24,6 +24,7 @@ conflag_lock = threading.Lock()
 
 @log
 def arg_parser(default_port, default_address):
+    """Парсер аргументов командной строки"""
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', default=default_port, type=int, nargs='?')
     parser.add_argument('-a', default=default_address, nargs='?')
@@ -35,6 +36,7 @@ def arg_parser(default_port, default_address):
 
 @log
 def config_load():
+    """Пармер конфигурации файла инициализации"""
     config = ConfigParser()
     dir_path = os.path.dirname(os.path.realpath(__file__))
     config.read(f"{dir_path}/server/{'server.ini'}")
@@ -51,6 +53,7 @@ def config_load():
 
 @log
 def main():
+    """Основная логика сервера"""
     config = config_load()
 
     listen_address, listen_port = arg_parser(

@@ -10,6 +10,7 @@ from common.utils import get_message, send_message
 
 
 class TestSocket:
+    """Юнит тесты"""
     def __init__(self, test_dict):
         self.test_dict = test_dict
         self.encoded_message = None

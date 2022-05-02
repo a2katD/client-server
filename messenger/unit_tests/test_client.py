@@ -9,7 +9,7 @@ from common.variables import *
 
 
 class TestClass(unittest.TestCase):
-
+    """Юнит тесты"""
     def test_create_presence_eaual(self):
         test = create_presence()
         test[TIME] = 1645608843.0250275

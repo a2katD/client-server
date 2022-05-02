@@ -1,20 +1,21 @@
 import os
 import sys
 
-from sqlalchemy import create_engine, Table, Column, Integer, String, Text, MetaData, DateTime
-from sqlalchemy.orm import mapper, sessionmaker
+from datetime import datetime
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 sys.path.append('../')
 from common.variables import *
-from datetime import datetime
 
 
 class ClientDatabase:
+    """Класс для работы с базой данных SQLite"""
     Base = declarative_base()
 
     class KnownUsers(Base):
-        """Класс тображения таблицы известных пользователей."""
+        """Класс тображения таблицы известных пользователей"""
 
         __tablename__ = 'known_users'
         id = Column(Integer, primary_key=True)
@@ -79,7 +80,8 @@ class ClientDatabase:
 
     def add_users(self, users_list):
         """Функция добавления известных пользователей
-        Пользователи получаются только с сервера, поэтому таблица очищается"""
+        Пользователи получаются только с сервера, поэтому таблица очищается
+        """
         self.session.query(self.KnownUsers).delete()
         for user in users_list:
             user_row = self.KnownUsers(user)
@@ -145,7 +147,6 @@ if __name__ == '__main__':
     print(test_db.check_user('test1'))
     print(test_db.check_user('test10'))
     print(test_db.get_history('test2'))
-    print(test_db.get_history(to_who='test2'))
     print(test_db.get_history('test3'))
     test_db.del_contact('test4')
     print(test_db.get_contacts())

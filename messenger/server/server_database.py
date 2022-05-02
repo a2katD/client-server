@@ -12,6 +12,7 @@ from common.variables import *
 
 
 class ServerStorage:
+    """Класс для работы с базой данных"""
     Base = declarative_base()
 
     class AllUsers(Base):
