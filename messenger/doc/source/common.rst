@@ -33,3 +33,29 @@ log_decor.py
 
 .. autoclass:: common.log_decor.login_required
 	:members:
+
+
+metaclasses.py
+~~~~~~~~~~~~~~
+
+.. autoclass:: common.metaclasses.ClientVerifier
+	:members:
+
+.. autoclass:: common.metaclasses.ServerVerifier
+	:members:
+
+
+utils.py
+~~~~~~~~
+
+.. autoclass:: common.utils.get_message
+	:members:
+
+.. autoclass:: common.utils.send_message
+	:members:
+
+
+variables.py
+~~~~~~~~~~~~
+
+Файл содержит константные значения для функций месенджера
