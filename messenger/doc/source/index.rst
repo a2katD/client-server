@@ -10,6 +10,13 @@ Welcome to ICQ's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   client
+   messenger.client
+   messenger.common
+   messenger.logs
+   messenger.server
+   messenger.unit_tests
+   server
    modules
 
 
