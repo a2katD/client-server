@@ -16,7 +16,8 @@
     <script src="_static/translations.js"></script>
     <link rel="index" title="Алфавитный указатель" href="genindex.html" />
     <link rel="search" title="Поиск" href="search.html" />
-    <link rel="prev" title="unit_test module" href="unit_tests.html" />
+    <link rel="next" title="Common module" href="common.html" />
+    <link rel="prev" title="Client module" href="client.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -42,6 +43,21 @@
 3. –no_gui Запуск только основных функций, без графической оболочки.</p>
 <section id="server-py">
 <h2>server.py<a class="headerlink" href="#server-py" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Запускаемый модуль,содержит парсер аргументов командной строки и функционал инициализации приложения.</p>
+<dl class="simple">
+<dt>server. <strong>arg_parser</strong> ()</dt><dd><dl class="simple">
+<dt>Парсер аргументов командной строки, возвращает кортеж из 2 элементов:</dt><dd><ul class="simple">
+<li><p>Прослушиваемый адрес</p></li>
+<li><p>Прослушиваемый порт</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>server. <strong>config_load</strong> ()</dt><dd><p>Пармер конфигурации файла инициализации</p>
+</dd>
+<dt>server. <strong>main</strong> ()</dt><dd><p>Основная логика сервера</p>
+</dd>
+</dl>
 </section>
 <section id="core-py">
 <h2>core.py<a class="headerlink" href="#core-py" title="Ссылка на этот заголовок">¶</a></h2>
@@ -242,9 +258,6 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="common.html">Common module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logs.html">logs module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unit_tests.html">unit_test module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Server module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#server-py">server.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#core-py">core.py</a></li>
@@ -256,13 +269,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#stat-window-py">stat_window.py</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="common.html">Common module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logs.html">logs module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unit_tests.html">unit_test module</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="unit_tests.html" title="предыдущая глава">unit_test module</a></li>
+      <li>Previous: <a href="client.html" title="предыдущая глава">Client module</a></li>
+      <li>Next: <a href="common.html" title="следующая глава">Common module</a></li>
   </ul></li>
 </ul>
 </div>

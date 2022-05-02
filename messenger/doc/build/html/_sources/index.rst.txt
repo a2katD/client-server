@@ -11,10 +11,11 @@ Welcome to ICQ's documentation!
    :caption: Contents:
 
    client
+   server
    common
    logs
    unit_tests
-   server
+
 
 Indices and tables
 ==================
