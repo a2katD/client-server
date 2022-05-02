@@ -11,11 +11,9 @@ Welcome to ICQ's documentation!
    :caption: Contents:
 
    client
-   messenger.client
-   messenger.common
-   messenger.logs
-   messenger.server
-   messenger.unit_tests
+   common
+   logs
+   unit_tests
    server
    modules
 
