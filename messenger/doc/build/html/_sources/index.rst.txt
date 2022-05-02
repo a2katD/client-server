@@ -15,9 +15,6 @@ Welcome to ICQ's documentation!
    logs
    unit_tests
    server
-   modules
-
-
 
 Indices and tables
 ==================
