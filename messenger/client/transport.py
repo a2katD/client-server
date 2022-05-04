@@ -1,19 +1,17 @@
 import socket
-import sys
 import time
 import logging
-import json
 import threading
 import hashlib
 import hmac
 import binascii
 from PyQt5.QtCore import pyqtSignal, QObject
 
-sys.path.append('../')
-from common.utils import *
-from common.variables import *
-from common.errors import ServerError
+from messenger.common.utils import *
+from messenger.common.variables import *
+from messenger.common.errors import ServerError
 
+sys.path.append('../')
 logger = logging.getLogger('client_dist')
 socket_lock = threading.Lock()
 
@@ -96,8 +94,8 @@ class ClientTransport(threading.Thread, QObject):
                         raise ServerError(ans[ERROR])
                     elif ans[RESPONSE] == 511:
                         ans_data = ans[DATA]
-                        hash = hmac.new(passwd_hash_string, ans_data.encode('utf-8'), 'MD5')
-                        digest = hash.digest()
+                        _hash = hmac.new(passwd_hash_string, ans_data.encode('utf-8'), 'MD5')
+                        digest = _hash.digest()
                         my_ans = RESPONSE_511
                         my_ans[DATA] = binascii.b2a_base64(digest).decode('ascii')
                         send_message(self.transport, my_ans)
@@ -124,8 +122,6 @@ class ClientTransport(threading.Thread, QObject):
             else:
                 logger.debug(f'Принят неизвестный '
                              f'код подтверждения {message[RESPONSE]}')
-
-
         elif ACTION in message \
                 and message[ACTION] == MESSAGE \
                 and SENDER in message \

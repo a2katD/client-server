@@ -3,10 +3,10 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QLabel, QTableView, QWidget
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt5.QtCore import QTimer
-from server.stat_window import StatWindow
-from server.config_window import ConfigWindow
-from server.add_user import RegisterUser
-from server.remove_user import DelUserDialog
+from messenger.server.stat_window import StatWindow
+from messenger.server.config_window import ConfigWindow
+from messenger.server.add_user import RegisterUser
+from messenger.server.remove_user import DelUserDialog
 
 
 class MainWindow(QMainWindow):
@@ -101,8 +101,8 @@ class MainWindow(QMainWindow):
     def create_users_model(self):
         """Метод заполняющий таблицу активных пользователей."""
         list_users = self.database.active_users_list()
-        list = QStandardItemModel()
-        list.setHorizontalHeaderLabels(
+        lst = QStandardItemModel()
+        lst.setHorizontalHeaderLabels(
             ['Имя Клиента', 'IP Адрес', 'Порт', 'Время подключения'])
         for row in list_users:
             user, ip, port, time = row
@@ -116,7 +116,7 @@ class MainWindow(QMainWindow):
             # требуется.
             time = QStandardItem(str(time.replace(microsecond=0)))
             time.setEditable(False)
-            list.appendRow([user, ip, port, time])
+            lst.appendRow([user, ip, port, time])
         self.active_clients_table.setModel(list)
         self.active_clients_table.resizeColumnsToContents()
         self.active_clients_table.resizeRowsToContents()

@@ -4,6 +4,7 @@ from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
 class Ui_MainClientWindow(object):
     """Конфигурация главного окна"""
+
     def setupUi(self, MainClientWindow):
         MainClientWindow.setObjectName("MainClientWindow")
         MainClientWindow.resize(756, 534)

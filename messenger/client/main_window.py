@@ -9,13 +9,13 @@ from PyQt5.QtCore import pyqtSlot, Qt
 from Cryptodome.Cipher import PKCS1_OAEP
 from Cryptodome.PublicKey import RSA
 
-sys.path.append('../')
-from client.main_window_conv import Ui_MainClientWindow
-from client.add_contact import AddContactDialog
-from client.del_contact import DelContactDialog
-from common.errors import ServerError
-from common.variables import *
+from messenger.client.main_window_conv import Ui_MainClientWindow
+from messenger.client.add_contact import AddContactDialog
+from messenger.client.del_contact import DelContactDialog
+from messenger.common.errors import ServerError
+from messenger.common.variables import *
 
+sys.path.append('../')
 logger = logging.getLogger('client_dist')
 
 
@@ -163,7 +163,8 @@ class ClientMainWindow(QMainWindow):
         """Функция добавления контакта"""
         global select_dialog
         select_dialog = AddContactDialog(self.transport, self.database)
-        select_dialog.btn_ok.clicked.connect(lambda: self.add_contact_action(select_dialog))
+        select_dialog.btn_ok.clicked.connect(
+            lambda: self.add_contact_action(select_dialog))
         select_dialog.show()
 
     def add_contact_action(self, item):

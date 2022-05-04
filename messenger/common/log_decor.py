@@ -2,10 +2,10 @@ import socket
 import sys
 import logging
 
-sys.path.append('../')
-import logs.config_server_log
-import logs.config_client_log
+import messenger.logs.config_server_log
+import messenger.logs.config_client_log
 
+sys.path.append('../')
 if sys.argv[0].find('client.py') == -1:
     LOGGER = logging.getLogger('serverlog')
 else:
@@ -14,6 +14,7 @@ else:
 
 def log(func):
     """Декоратор выполняющий логирование функция"""
+
     def wrap(*args, **kwargs):
         res = func(*args, **kwargs)
         LOGGER.debug(f'функция {func.__name__} с аргументами {args}, {kwargs} вызвана из функции {func.__module__}')
@@ -32,8 +33,8 @@ def login_required(func):
     """
 
     def checker(*args, **kwargs):
-        from server.core import MessageProcessor
-        from common.variables import ACTION, PRESENCE
+        from messenger.server.core import MessageProcessor
+        from messenger.common.variables import ACTION, PRESENCE
         if isinstance(args[0], MessageProcessor):
             found = False
             for arg in args:

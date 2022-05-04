@@ -1,2 +1,0 @@
-2022-05-02 16:57:56,138 DEBUG    log_decor.py функция send_message с аргументами (<unit_tests.test_utils.TestSocket object at 0x000001C9C98CE850>, {'action': 'presence', 'time': 111111.111111, 'user': {'account_name': 'test_test'}}), {} вызвана из функции common.utils
-2022-05-02 16:59:10,218 DEBUG    log_decor.py функция send_message с аргументами (<unit_tests.test_utils.TestSocket object at 0x00000253B215C520>, {'action': 'presence', 'time': 111111.111111, 'user': {'account_name': 'test_test'}}), {} вызвана из функции common.utils

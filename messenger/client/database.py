@@ -7,7 +7,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 sys.path.append('../')
-from common.variables import *
 
 
 class ClientDatabase:
@@ -54,14 +53,16 @@ class ClientDatabase:
     def __init__(self, name):
         path = os.path.dirname(os.path.realpath(__file__))
         filename = f'client_{name}.db3'
-        self.database_engine = create_engine(f'sqlite:///{os.path.join(path, filename)}',
-                                             echo=False,
-                                             pool_recycle=7200,
-                                             connect_args={'check_same_thread': False})
+        self.database_engine = create_engine(
+            f'sqlite:///{os.path.join(path, filename)}',
+            echo=False,
+            pool_recycle=7200,
+            connect_args={'check_same_thread': False},
+        )
 
         self.Base.metadata.create_all(self.database_engine)
-        Session = sessionmaker(bind=self.database_engine)
-        self.session = Session()
+        session = sessionmaker(bind=self.database_engine)
+        self.session = session()
 
         self.session.query(self.Contacts).delete()
         self.session.commit()
@@ -138,10 +139,12 @@ if __name__ == '__main__':
         test_db.add_contact(i)
     test_db.add_contact('test4')
     test_db.add_users(['test1', 'test2', 'test3', 'test4', 'test5'])
-    test_db.save_message('test1', 'test2',
-                         f'Привет! я тестовое сообщение от {datetime.now()}!')
-    test_db.save_message('test2', 'test1',
-                         f'Привет! я другое тестовое сообщение от {datetime.now()}!')
+    test_db.save_message(
+        'test1', 'test2',
+        f'Привет! я тестовое сообщение от {datetime.now()}!')
+    test_db.save_message(
+        'test2', 'test1',
+        f'Привет! я другое тестовое сообщение от {datetime.now()}!')
     print(test_db.get_contacts())
     print(test_db.get_users())
     print(test_db.check_user('test1'))

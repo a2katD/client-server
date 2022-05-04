@@ -8,12 +8,12 @@ import binascii
 import os
 import sys
 
-sys.path.append('../')
-from common.descriptrs import Port
-from common.variables import *
-from common.utils import send_message, get_message
-from common.log_decor import login_required
+from messenger.common.descriptrs import Port
+from messenger.common.variables import *
+from messenger.common.utils import send_message, get_message
+from messenger.common.log_decor import login_required
 
+sys.path.append('../')
 logger = logging.getLogger('server_dist')
 
 
@@ -68,8 +68,6 @@ class MessageProcessor(threading.Thread):
                 self.clients.append(client)
 
             recv_data_lst = []
-            send_data_lst = []
-            err_lst = []
             # Проверяем на наличие ждущих клиентов
             try:
                 if self.clients:
@@ -118,8 +116,8 @@ class MessageProcessor(threading.Thread):
 
     def process_message(self, message):
         """Метод отправки сообщения клиенту."""
-        if message[DESTINATION] in self.names and self.names[message[DESTINATION]
-        ] in self.listen_sockets:
+        if message[DESTINATION] in self.names \
+                and self.names[message[DESTINATION]] in self.listen_sockets:
             try:
                 send_message(self.names[message[DESTINATION]], message)
                 logger.info(
@@ -274,8 +272,8 @@ class MessageProcessor(threading.Thread):
             message_auth[DATA] = random_str.decode('ascii')
             # Создаём хэш пароля и связки с рандомной строкой, сохраняем
             # серверную версию ключа
-            hash = hmac.new(self.database.get_hash(message[USER][ACCOUNT_NAME]), random_str, 'MD5')
-            digest = hash.digest()
+            _hash = hmac.new(self.database.get_hash(message[USER][ACCOUNT_NAME]), random_str, 'MD5')
+            digest = _hash.digest()
             logger.debug(f'Auth message = {message_auth}')
             try:
                 # Обмен с клиентом

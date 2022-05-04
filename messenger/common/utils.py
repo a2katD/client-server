@@ -1,11 +1,10 @@
 import json
 import sys
-import os
+
+from messenger.common.log_decor import log
+from messenger.common.variables import *
 
 sys.path.append('../')
-from common.errors import *
-from common.log_decor import log
-from common.variables import *
 
 
 @log

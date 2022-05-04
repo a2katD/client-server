@@ -57,12 +57,15 @@ def main():
     config = config_load()
 
     listen_address, listen_port = arg_parser(
-        config['SETTINGS']['Default_port'], config['SETTINGS']['Listen_Address'])
+        config['SETTINGS']['Default_port'],
+        config['SETTINGS']['Listen_Address'],
+    )
 
     database = ServerStorage(
         os.path.join(
             config['SETTINGS']['Database_path'],
-            config['SETTINGS']['Database_file']))
+            config['SETTINGS']['Database_file']),
+    )
 
     server = MessageProcessor(listen_address, listen_port, database)
     server.daemon = True

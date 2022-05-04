@@ -13,6 +13,7 @@ from time import sleep
 PYTHON_PATH = sys.executable
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 
+
 def main():
     def get_subprocess(file_with_args):
         """Лаунчер для запуска сервера и клиентов Ubuntu"""
@@ -21,11 +22,14 @@ def main():
         args = ["gnome-terminal", "--disable-factory", "--", "bash", "-c", file_full_path]
         return subprocess.Popen(args, preexec_fn=os.setpgrp)
 
-
     process = []
     while True:
-        TEXT_FOR_INPUT = "Выберите действие: q - выход , s - запустить сервер, k - запустить клиенты x - закрыть все окна: "
-        action = input(TEXT_FOR_INPUT)
+        text_for_input = "Выберите действие: " \
+                         "q - выход , " \
+                         "s - запустить сервер, " \
+                         "k - запустить клиенты " \
+                         "x - закрыть все окна: "
+        action = input(text_for_input)
 
         if action == "q":
             break
@@ -33,8 +37,10 @@ def main():
             process.append(get_subprocess("server.py"))
 
         elif action == 'k':
-            print('Убедитесь, что на сервере зарегистрировано необходимо количество клиентов с паролем 123456.')
-            print('Первый запуск может быть достаточно долгим из-за генерации ключей!')
+            print('Убедитесь, что на сервере зарегистрировано '
+                  'необходимо количество клиентов с паролем 123456.')
+            print('Первый запуск может быть достаточно '
+                  'долгим из-за генерации ключей!')
             clients_count = int(
                 input('Введите количество тестовых клиентов для запуска: '))
             # Запускаем клиентов:
@@ -45,6 +51,7 @@ def main():
             while process:
                 victim = process.pop()
                 os.killpg(victim.pid, signal.SIGINT)
+
 
 if __name__ == '__main__':
     main()
