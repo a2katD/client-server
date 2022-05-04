@@ -1,15 +1,15 @@
 import json
 import sys
-import os
+
+from messenger.common.log_decor import log
+from messenger.common.variables import *
 
 sys.path.append('../')
-from common.errors import *
-from common.log_decor import log
-from common.variables import *
 
 
 @log
 def get_message(client):
+    """Функция приема сообщений"""
     encoded_response = client.recv(MAX_PACKAGE_LENGTH)
     json_response = encoded_response.decode(ENCODING)
     response = json.loads(json_response)
@@ -21,6 +21,7 @@ def get_message(client):
 
 @log
 def send_message(sock, message):
+    """Функция отправки сообщений"""
     js_message = json.dumps(message)
     encoded_message = js_message.encode(ENCODING)
     sock.send(encoded_message)

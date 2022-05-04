@@ -1,14 +1,10 @@
-import sys
-
 from PyQt5.QtWidgets import QDialog, QPushButton, QLineEdit, QApplication, QLabel, qApp
-from PyQt5.QtCore import QEvent
 from PyQt5.QtGui import QPixmap
 
-sys.path.append('../')
 
-
-# Стартовый диалог с выбором имени пользователя
 class UserNameDialog(QDialog):
+    """Класс стартового диалога с выбором имени пользователя"""
+
     def __init__(self):
         super().__init__()
 
@@ -50,8 +46,10 @@ class UserNameDialog(QDialog):
 
         self.show()
 
-    # Обработчик кнопки ОК, если поле ввода не пустое, ставим флаг и завершаем приложение.
     def click(self):
+        """Обработчик кнопки ОК, если поле ввода не пустое,
+        ставим флаг и завершаем приложение
+        """
         if self.client_name.text() and self.client_passwd.text():
             self.ok_pressed = True
             qApp.exit()

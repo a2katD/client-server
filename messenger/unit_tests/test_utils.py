@@ -10,6 +10,7 @@ from common.utils import get_message, send_message
 
 
 class TestSocket:
+    """Тестовый сокет для юнит тестов"""
     def __init__(self, test_dict):
         self.test_dict = test_dict
         self.encoded_message = None
@@ -26,6 +27,7 @@ class TestSocket:
 
 
 class TestClass(unittest.TestCase):
+    """Класс для Юнит тестов"""
     test_dict_send = {
         ACTION: PRESENCE,
         TIME: 111111.111111,

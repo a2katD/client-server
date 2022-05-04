@@ -1,16 +1,10 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'client_dist.ui'
-#
-# Created by: PyQt5 UI code generator 5.11.3
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
 
 class Ui_MainClientWindow(object):
+    """Конфигурация главного окна"""
+
     def setupUi(self, MainClientWindow):
         MainClientWindow.setObjectName("MainClientWindow")
         MainClientWindow.resize(756, 534)

@@ -5,13 +5,14 @@ from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from messenger.common.variables import *
 
 sys.path.append(os.path.join(os.getcwd(), '..'))
 sys.path.append('../')
-from common.variables import *
 
 
 class ServerStorage:
+    """Класс для работы с базой данных"""
     Base = declarative_base()
 
     class AllUsers(Base):
@@ -89,11 +90,14 @@ class ServerStorage:
             self.accepted = 0
 
     def __init__(self, path):
-        self.database_engine = create_engine(f'sqlite:///{path}', echo=False, pool_recycle=7200,
-                                             connect_args={'check_same_thread': False})
+        self.database_engine = create_engine(
+            f'sqlite:///{path}',
+            echo=False,
+            pool_recycle=7200,
+            connect_args={'check_same_thread': False})
         self.Base.metadata.create_all(self.database_engine)
-        Session = sessionmaker(bind=self.database_engine)
-        self.session = Session()
+        session = sessionmaker(bind=self.database_engine)
+        self.session = session()
 
         self.session.query(self.ActiveUsers).delete()
         self.session.commit()
@@ -249,22 +253,3 @@ class ServerStorage:
             return True
         else:
             return False
-
-
-if __name__ == '__main__':
-    db = ServerStorage()
-    db.user_login('client_1', '192.168.1.4', 8888)
-    db.user_login('client_2', '192.168.1.5', 7777)
-
-    print(' ---- Список пользователей ----')
-    print(db.active_users_list())
-
-    db.user_logout('client_1')
-    print(' ---- Выполняем логаут client_1 ----')
-    print(db.active_users_list())
-
-    print(' ---- История входов пользователя client_1 ----')
-    print(db.login_history('client_1'))
-
-    print(' ---- Список всех зарегистрированных пользователей ----')
-    print(db.users_list())

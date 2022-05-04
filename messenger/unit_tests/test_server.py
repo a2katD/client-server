@@ -9,7 +9,7 @@ from common.variables import *
 
 
 class TestClass(unittest.TestCase):
-
+    """Класс для Юнит тестов"""
     def test_process_client_message_response_200_equal(self):
         message = {ACTION: PRESENCE, TIME: 1645608843.0250275, USER: {ACCOUNT_NAME: 'Guest'}}
         self.assertEqual(process_client_message(message), {RESPONSE: 200})

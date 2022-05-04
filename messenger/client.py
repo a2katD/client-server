@@ -6,19 +6,20 @@ import os
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from Cryptodome.PublicKey import RSA
 
-from common.errors import *
-from common.variables import *
-from common.log_decor import log
-from client.database import ClientDatabase
-from client.transport import ClientTransport
-from client.main_window import ClientMainWindow
-from client.start_dialog import UserNameDialog
+from messenger.common.errors import *
+from messenger.common.variables import *
+from messenger.common.log_decor import log
+from messenger.client.database import ClientDatabase
+from messenger.client.transport import ClientTransport
+from messenger.client.main_window import ClientMainWindow
+from messenger.client.start_dialog import UserNameDialog
 
 CLIENT_LOGGER = logging.getLogger('clientlog')
 
 
 @log
 def arg_parser():
+    """Парсер аргуменетов командной строки строки"""
     parser = argparse.ArgumentParser()
     parser.add_argument('addr', default=DEFAULT_ADDR, nargs='?')
     parser.add_argument('port', default=DEFAULT_PORT, type=int, nargs='?')
@@ -32,14 +33,15 @@ def arg_parser():
 
     if not 1023 < server_port < 65536:
         CLIENT_LOGGER.critical(
-            f'Попытка запуска клиента с неподходящим номером порта: {server_port}. Допустимы адреса с 1024 до 65535. Клиент завершается.')
+            f'Попытка запуска клиента с неподходящим номером порта: '
+            f'{server_port}. Допустимы адреса с 1024 до 65535. '
+            f'Клиент завершается.')
         sys.exit(1)
 
     return server_address, server_port, client_name, client_passwd
 
 
 if __name__ == '__main__':
-    # Загружаем параметы коммандной строки
     server_address, server_port, client_name, client_passwd = arg_parser()
 
     # Создаём клиентокое приложение

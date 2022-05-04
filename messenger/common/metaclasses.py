@@ -6,6 +6,10 @@ CLIENT_LOGGER = logging.getLogger('clientlog')
 
 
 class ClientVerifier(type):
+    """Метакласс выпоняющий проверку,
+    что в клиентском классе нет неверных вызовов
+    """
+
     def __init__(cls, clsname, bases, clsdict):
         methods = []
         methods_2 = []
@@ -28,20 +32,28 @@ class ClientVerifier(type):
                             attrs.append(i.argval)
         for command in ('accept', 'listen', 'socket'):
             if command in methods:
-                CLIENT_LOGGER.error('В классе обнаружено использование запрещённого метода')
-                raise TypeError('В классе обнаружено использование запрещённого метода')
+                CLIENT_LOGGER.error('В классе обнаружено '
+                                    'использование запрещённого метода')
+                raise TypeError('В классе обнаружено '
+                                'использование запрещённого метода')
         if 'get_message' in methods or 'send_message' in methods:
             pass
         else:
-            CLIENT_LOGGER.error('Отсутствуют вызовы функций, работающих с сокетами.')
-            raise TypeError('Отсутствуют вызовы функций, работающих с сокетами.')
+            CLIENT_LOGGER.error('Отсутствуют вызовы функций, '
+                                'работающих с сокетами.')
+            raise TypeError('Отсутствуют вызовы функций, '
+                            'работающих с сокетами.')
         super().__init__(clsname, bases, clsdict)
 
 
 class ServerVerifier(type):
+    """Метакласс выпоняющий проверку,
+    что в серверном классе нет неверных вызовов
+    """
+
     def __init__(cls, clsname, bases, clsdict):
         methods = []  # 'LOAD_GLOBAL'
-        methods_2 = []  # 'LOAD_METHOD', не понятно для чего, но возможно пригодится в будующем
+        methods_2 = []  # 'LOAD_METHOD',
         attrs = []  # 'LOAD_ATTR'
         for func in clsdict:
             try:
@@ -60,8 +72,10 @@ class ServerVerifier(type):
                         if i.argval not in attrs:
                             attrs.append(i.argval)
         if 'connect' in methods:
-            SERVER_LOGGER.error('Использование метода connect недопустимо в серверном классе')
-            raise TypeError('Использование метода connect недопустимо в серверном классе')
+            SERVER_LOGGER.error('Использование метода connect '
+                                'недопустимо в серверном классе')
+            raise TypeError('Использование метода connect '
+                            'недопустимо в серверном классе')
         if not ('SOCK_STREAM' in methods and 'AF_INET' in methods):
             SERVER_LOGGER.error('Некорректная инициализация сокета.')
             raise TypeError('Некорректная инициализация сокета.')
