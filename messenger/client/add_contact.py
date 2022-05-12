@@ -18,9 +18,7 @@ class AddContactDialog(QDialog):
 
         self.setFixedSize(300, 120)
         self.setWindowTitle('ICQ - Добавление контакта')
-        # Удаляем диалог, если окно было закрыто преждевременно
         self.setAttribute(Qt.WA_DeleteOnClose)
-        # Делаем это окно модальным (т.е. поверх других)
         self.setModal(True)
 
         self.selector_label = QLabel('Выберите контакт для добавления:', self)
@@ -35,7 +33,7 @@ class AddContactDialog(QDialog):
         self.btn_refresh = QPushButton(self)
         btn_icon = QIcon('common/refresh_icon.png')
         self.btn_refresh.setIcon(btn_icon)
-        self.btn_refresh.setIconSize(QSize(48,48))
+        self.btn_refresh.setIconSize(QSize(48, 48))
         self.btn_refresh.setFixedSize(50, 50)
         self.btn_refresh.move(230, 20)
 
@@ -74,14 +72,3 @@ class AddContactDialog(QDialog):
         else:
             logger.debug('Обновление списка пользователей с сервера выполнено')
             self.possible_contacts_update()
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    from database import ClientDatabase
-    database = ClientDatabase('test1')
-    from transport import ClientTransport
-    transport = ClientTransport(7777, '127.0.0.1', database, 'test1')
-    window = AddContactDialog(transport, database)
-    window.show()
-    app.exec_()

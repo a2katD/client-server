@@ -6,6 +6,7 @@ from PyQt5.QtGui import QPixmap
 
 sys.path.append('../')
 
+
 # Стартовый диалог с выбором имени пользователя
 class UserNameDialog(QDialog):
     def __init__(self):
@@ -14,7 +15,7 @@ class UserNameDialog(QDialog):
         self.ok_pressed = False
 
         self.setWindowTitle('ICQ')
-        self.setFixedSize(175, 260)
+        self.setFixedSize(175, 310)
 
         self.icon = QLabel(self)
         pixmap = QPixmap('common/icon128.png')
@@ -28,21 +29,30 @@ class UserNameDialog(QDialog):
 
         self.client_name = QLineEdit(self)
         self.client_name.setFixedSize(154, 20)
-        self.client_name.move(10, 188)
+        self.client_name.move(10, 180)
 
         self.btn_ok = QPushButton('Начать', self)
-        self.btn_ok.move(10, 218)
+        self.btn_ok.move(10, 268)
         self.btn_ok.clicked.connect(self.click)
 
         self.btn_cancel = QPushButton('Выход', self)
-        self.btn_cancel.move(90, 218)
+        self.btn_cancel.move(90, 268)
         self.btn_cancel.clicked.connect(qApp.exit)
+
+        self.label_passwd = QLabel('Введите пароль:', self)
+        self.label_passwd.move(15, 215)
+        self.label_passwd.setFixedSize(150, 15)
+
+        self.client_passwd = QLineEdit(self)
+        self.client_passwd.setFixedSize(154, 20)
+        self.client_passwd.move(10, 230)
+        self.client_passwd.setEchoMode(QLineEdit.Password)
 
         self.show()
 
     # Обработчик кнопки ОК, если поле ввода не пустое, ставим флаг и завершаем приложение.
     def click(self):
-        if self.client_name.text():
+        if self.client_name.text() and self.client_passwd.text():
             self.ok_pressed = True
             qApp.exit()
 

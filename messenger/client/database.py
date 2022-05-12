@@ -1,8 +1,11 @@
 import os
+import sys
 
 from sqlalchemy import create_engine, Table, Column, Integer, String, Text, MetaData, DateTime
 from sqlalchemy.orm import mapper, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+
+sys.path.append('../')
 from common.variables import *
 from datetime import datetime
 
@@ -25,14 +28,15 @@ class ClientDatabase:
 
         __tablename__ = 'message_history'
         id = Column(Integer, primary_key=True)
-        from_user = Column(String)
-        to_user = Column(String)
+        contact = Column(String)
+        direction = Column(String)
         message = Column(Text)
         date = Column(DateTime)
 
-        def __init__(self, from_user, to_user, message):
-            self.from_user = from_user
-            self.to_user = to_user
+        def __init__(self, contact, direction, message):
+            self.id = None
+            self.contact = contact
+            self.direction = direction
             self.message = message
             self.date = datetime.now()
 
@@ -82,9 +86,9 @@ class ClientDatabase:
             self.session.add(user_row)
         self.session.commit()
 
-    def save_message(self, from_user, to_user, message):
+    def save_message(self, contact, direction, message):
         """Функция сохраняет сообщения"""
-        message_row = self.MessageHistory(from_user, to_user, message)
+        message_row = self.MessageHistory(contact, direction, message)
         self.session.add(message_row)
         self.session.commit()
 
@@ -110,15 +114,20 @@ class ClientDatabase:
         else:
             return False
 
-    def get_history(self, from_who=None, to_who=None):
-        """Функция возвращает историю переписки"""
-        query = self.session.query(self.MessageHistory)
-        if from_who:
-            query = query.filter_by(from_user=from_who)
-        if to_who:
-            query = query.filter_by(to_user=to_who)
-        return [(history_row.from_user, history_row.to_user, history_row.message, history_row.date)
-                for history_row in query.all()]
+    def get_history(self, contact):
+        """ Метод, возвращающий историю сообщений с определённым пользователем. """
+        query = self.session.query(
+            self.MessageHistory).filter_by(
+            contact=contact)
+        return [(history_row.contact,
+                 history_row.direction,
+                 history_row.message,
+                 history_row.date) for history_row in query.all()]
+
+    def contacts_clear(self):
+        """ Метод, очищающий таблицу со списком контактов. """
+        self.session.query(self.Contacts).delete()
+        self.session.commit()
 
 
 if __name__ == '__main__':
